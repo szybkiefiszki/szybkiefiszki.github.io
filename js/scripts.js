@@ -11,10 +11,10 @@ app.service('storage', function() {
     };
     
     this.getCards = function() {
-        var result = "", cards = [];
+        var result = "", cards = []; 
         result = localStorage.getItem('fastCards');
         
-        if(result == "") {
+        if(result == "" || result == null) {
             result = '{"question":"Gdzie urodził się Fryderyk Chopin?","answer":"Żelazowa Wola","active":true}|{"question":"W który roku zmarł Ludwig van Beethoven?","answer":"1827r."}|{"question":"W którym roku urodził się Wolfgang Amadeus Mozart?","answer":"1756r."}|{"question":"Gdzie umarł Johannes Brahms?","answer":"W Wiedniu"}|{"question":"W jakich latach żył Georg Friedrich Händel?","answer":"1685 - 1759"}';
         }
             
