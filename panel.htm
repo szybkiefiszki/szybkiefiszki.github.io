@@ -1,0 +1,28 @@
+<div class="panel wrapper"> 
+        <div class="flip-wrapper">
+            <div class="flip-container" ng-repeat="card in ctrl.cards" ng-class="{active: card.active, hover: card.hover} " ng-click="ctrl.toggleHover($index)">
+                <div class="flipper">
+                    <div class="front">
+                        <div class="flip__content" ng-style="{'background-image': 'url('+card.image+')'}">
+                            <p>{{card.question}}</p>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div class="flip__content" ng-style="{background: ctrl.cardBackground, color: ctrl.cardColor}">
+                            <p>{{card.answer}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flip-list">
+            <div class="nav">
+                <a class="prev" ng-click="ctrl.changeCard(ctrl.currentCard-1)"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
+                <span>{{ctrl.currentCard+1}}</span>
+                <a class="next" ng-click="ctrl.changeCard(ctrl.currentCard+1)"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
+            </div>
+            <div class="dots">
+                <a ng-repeat="card in ctrl.cards" ng-class="{active: card.active}" ng-click="ctrl.changeCard($index)"></a>
+            </div>
+        </div>
+    </div>

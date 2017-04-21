@@ -1,4 +1,21 @@
-var app = angular.module('cardsApp', []);
+var app = angular.module('cardsApp', ['ui.router', 'ngAnimate']);
+
+app.config(function($stateProvider, $locationProvider) {
+    $locationProvider.hashPrefix('');
+  $stateProvider.state({
+    name: 'default',
+    url: '/',
+    templateUrl: 'panel.htm'
+  }).state({
+    name: 'list',
+    url: '/list',
+    templateUrl: 'list.htm'
+  }).state({
+    name: 'config',
+    url: '/config',
+    templateUrl: 'config.htm'
+  });
+});
 
 app.service('storage', function() {
     this.saveCards = function(cards) {
@@ -27,76 +44,109 @@ app.service('storage', function() {
     };
 }); 
 
-app.controller('cardsCtrl', function($scope, storage) {
-    $scope.loader = true;
-    $scope.question = "";
-    $scope.answer = "";
-    $scope.cards = storage.getCards();
+app.directive("fileread", [function () {
+    return {
+        scope: {
+            fileread: "="
+        },
+        link: function (scope, element, attributes) {
+            element.bind("change", function (changeEvent) {
+                var reader = new FileReader();
+                reader.onload = function (loadEvent) {
+                    scope.$apply(function () {
+                        scope.fileread = loadEvent.target.result;
+                    });
+                }
+                reader.readAsDataURL(changeEvent.target.files[0]);
+            });
+        }
+    }
+}]);
 
-    $scope.cards.forEach(function(item, index){
+app.controller('cardsCtrl', function($scope, $timeout, storage) {
+    var vm = this;
+    vm.loader = true;
+    vm.image = null;
+    vm.question = "";
+    vm.answer = "";
+    vm.notiSuccess = false;
+    vm.notiWarning = false;
+    vm.cards = storage.getCards();
+
+    vm.cards.forEach(function(item, index){
         item.hover = false;
         if(item.active == true) {
-            $scope.currentCard = index;        
+            vm.currentCard = index;        
         } 
     });
     
-    $scope.toggleHover = function(index) {
-        if($scope.cards[index].hover) {
-            $scope.cards[index].hover = false;
+    vm.toggleHover = function(index) {
+        if(vm.cards[index].hover) {
+            vm.cards[index].hover = false;
         } else {
-            $scope.cards[index].hover = true;
+            vm.cards[index].hover = true;
         }
     }
     
-    $scope.toggleConfig = function(index) {
-        if($scope.config) {
-            $scope.config = false;
+    vm.setPage = function(page) {
+        if(page =='home') {
+            vm.config = false;
         } else {
-            $scope.config = true;
+            vm.config = true;
         }
     }
     
-    $scope.removeCard = function(index) {
-        if($scope.cards[index].active) {
-            $scope.changeCard(index+1);
-            $scope.changeCard(index-1);
+    vm.removeCard = function(index) {
+        if(vm.cards[index].active) {
+            vm.changeCard(index+1);
+            vm.changeCard(index-1);
         }
-        if(index <= $scope.currentCard) $scope.currentCard--;
-        $scope.cards.splice(index, 1); 
+        if(index <= vm.currentCard) vm.currentCard--;
+        vm.cards.splice(index, 1); 
         
     };
     
-    $scope.addCard = function(index) {
-        if($scope.question != "" && $scope.answer != "") {
-            $scope.cards.push({
-                question: $scope.question,
-                answer: $scope.answer
+    vm.addCard = function() {
+        if(vm.question != "" && vm.answer != "") {
+            vm.cards.push({
+                image: vm.image,
+                question: vm.question,
+                answer: vm.answer
             });
-            if($scope.cards.length==1){
-                $scope.cards[0].active=true;
-                $scope.currentCard = 0
+            if(vm.cards.length==1){
+                vm.cards[0].active=true;
+                vm.currentCard = 0
             }
-            $scope.question = "";
-            $scope.answer = "";
+            vm.image = null;
+            vm.question = "";
+            vm.answer = "";
         } else {
-            alert("Wprowadź pytanie i odpowiedź.");
+            if(!vm.notiWarning) {
+                vm.notiWarning = true;
+                $timeout(function(){
+                    vm.notiWarning = false;
+                }, 3000);
+            }
         }
     };
     
-    $scope.changeCard = function(index) {
-        if(index >= 0 && index < $scope.cards.length) {
-            $scope.cards[$scope.currentCard].active=false;
-            $scope.currentCard = index;
-            $scope.cards[$scope.currentCard].active=true;
-            $scope.cards.forEach(function(item){
+    vm.changeCard = function(index) {
+        if(index >= 0 && index < vm.cards.length) {
+            vm.cards[vm.currentCard].active=false;
+            vm.currentCard = index;
+            vm.cards[vm.currentCard].active=true;
+            vm.cards.forEach(function(item){
                item.hover = false; 
             });
         }
     }
     
-    $scope.syncCards = function() {
-        if(storage.saveCards($scope.cards)) {
-            alert("zapisano aktualny stan fiszek");
+    vm.syncCards = function() {
+        if(storage.saveCards(vm.cards) && !vm.notiSuccess) {
+            vm.notiSuccess = true;
+            $timeout(function(){
+                vm.notiSuccess = false;
+            }, 3000);
         }
     }
     

@@ -4,89 +4,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>Szybkie fiszki - darmowy system tworzenia fiszek</title>
-    <meta name="description" content="Szybkie fiszki to darmowy system do szybkiej i efektywnej nauki za pomocą fiszek.">
-    <link href="css/style.css" rel="stylesheet" />
+    <title>Szybkie fiszki</title>
+    <link href="css/style.min.css" rel="stylesheet" />
     <link href="css/font-awesome.min.css" rel="stylesheet" />
+    
+</head> 
 
-</head>
-
-<body ng-app="cardsApp" ng-controller="cardsCtrl">
-    <div class="loader" ng-class="{hidden: loader}"></div>
-    <div class="hamburger" ng-click="toggleConfig()" ng-class="{open: config}">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-    <div class="sync" ng-click="syncCards()"><i class="fa fa-floppy-o" aria-hidden="true"></i></div>
-    <div class="panel wrapper" ng-class="{hidden: config}">
-        <h1>Szybkie fiszki</h1>
-        <div class="flip-wrapper">
-            <div class="flip-container" ng-repeat="card in cards" ng-class="{active: card.active, hover: card.hover} " ng-click="toggleHover($index)">
-                <div class="flipper">
-                    <div class="front">
-                        <div class="flip__content">
-                            <p>{{card.question}}</p>
-                        </div>
-                    </div>
-                    <div class="back">
-                        <div class="flip__content">
-                            <p>{{card.answer}}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="flip-list">
-            <div class="nav">
-                <a class="prev" ng-click="changeCard(currentCard-1)"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
-                <span>{{currentCard+1}}</span>
-                <a class="next" ng-click="changeCard(currentCard+1)"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
-            </div>
-            <div class="dots">
-                <a ng-repeat="card in cards" ng-class="{active: card.active}" ng-click="changeCard($index)"></a>
-            </div>
-        </div>
-    </div>
-    <div class="config" ng-class="{show: config}">
-       <div class="wrapper config__inner">
-       
-        <table>
-            <thead>
-                <tr>
-                    <th class="small">#</th>
-                    <th>Pytanie</th>
-                    <th>Odpowiedź</th>
-                    <th class="small">Opcje</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="card in cards">
-                    <td class="small">{{$index}}</td>
-                    <td><input ng-model="card.question" /></td>
-                    <td><input ng-model="card.answer" /></td>
-                    <td class="small">
-                        <a ng-click="removeCard($index)" class="danger">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                        </a>
-                    </td>
-                </tr>
-                <tr class="new-card">
-                    <td class="small">{{cards.length}}</td>
-                    <td><input ng-model="question" /></td>
-                    <td><input ng-model="answer" /></td>
-                    <td class="small">
-                        <a ng-click="addCard()" class="success">
-                            <i class="fa fa-plus" aria-hidden="true"></i>
-                        </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        </div>
-    </div>
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>-->
+<body ng-app="cardsApp" ng-controller="cardsCtrl as ctrl">
+    <style>
+        
+        body {
+            background: {{ctrl.pageBackground}}; 
+        }
+        
+        body, body a, input, .flip-list .nav a, .flip-list span{
+            color: {{ctrl.pageColor}};
+        }
+        
+        .list th, .list .new-card input, .flip-list .nav a, .flip-list span, .flip-list .dots a {
+            border-color: {{ctrl.pageColor}}; 
+        }
+        
+        .flip-list .nav span {
+            box-shadow: 0 0 0 1px {{ctrl.pageColor}};
+        }
+        
+        .menu--viola .menu__item::before,
+        .menu--viola .menu__item::after,
+        .menu--viola .menu__link::before,
+        .menu--viola .menu__link::after,
+        .flip-list .dots a.active{
+            background: {{ctrl.pageColor}};
+        }
+    </style>
+    <div class="loader" ng-class="{hidden: ctrl.loader}"></div>
+    <nav class="menu menu--viola">
+        <ul class="menu__list">
+            <li class="menu__item">
+                <span>Szybkie Fiszki</span>
+            </li>
+            <li class="menu__item" ui-sref-active="menu__item--current">
+                <a ui-sref="default" class="menu__link" >
+                    Przeglądaj
+                </a>
+            </li>
+            <li class="menu__item" ui-sref-active="menu__item--current">
+                <a ui-sref="list" class="menu__link" >
+                    Zarządzaj
+                </a>
+            </li>
+            <li class="menu__item" ui-sref-active="menu__item--current">
+                <a ui-sref="config" class="menu__link" >
+                    Konfiguruj
+                </a>
+            </li>
+            <li class="menu__item">
+                <a class="menu__link" ng-click="ctrl.syncCards()">
+                    Zapisz
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <ui-view></ui-view>
+    
+    <div class="noti noti--success" ng-class="{'noti--active': ctrl.notiSuccess}">Zapisano aktualny stan fiszek!</div>
+    <div class="noti noti--warning" ng-class="{'noti--active': ctrl.notiWarning}">Wprowadź pytanie i odpowiedź!</div>
     <script src="js/angular.min.js"></script>
+    <script src="js/angular-ui-router.min.js"></script>
+    <script src="js/angular-animate.min.js"></script>
     <script src="js/scripts.js"></script>
 </body>
 
