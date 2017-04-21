@@ -1,7 +1,8 @@
 var app = angular.module('cardsApp', ['ui.router', 'ngAnimate']);
 
-app.config(function($stateProvider, $locationProvider) {
-    $locationProvider.hashPrefix('');
+app.config(function($stateProvider, $locationProvider, $urlRouterProvider) {
+    $locationProvider.hashPrefix('')
+    $urlRouterProvider.otherwise('/');
   $stateProvider.state({
     name: 'default',
     url: '/',
