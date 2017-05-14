@@ -6,39 +6,16 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>Szybkie fiszki - darmowy system tworzenia fiszek</title>
     <meta name="description" content="Szybkie fiszki to darmowy system do szybkiej i efektywnej nauki za pomocą fiszek.">
-    <link href="css/style.min.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
     <link href="css/font-awesome.min.css" rel="stylesheet" />
     
 </head> 
 
-<body ng-app="cardsApp" ng-controller="cardsCtrl as ctrl">
-    <style>
-        
-        body {
-            background: {{ctrl.pageBackground}}; 
-        }
-        
-        body, body a, input, .flip-list .nav a, .flip-list span{
-            color: {{ctrl.pageColor}};
-        }
-        
-        .list th, .list .new-card input, .flip-list .nav a, .flip-list span, .flip-list .dots a {
-            border-color: {{ctrl.pageColor}}; 
-        }
-        
-        .flip-list .nav span {
-            box-shadow: 0 0 0 1px {{ctrl.pageColor}};
-        }
-        
-        .menu--viola .menu__item::before,
-        .menu--viola .menu__item::after,
-        .menu--viola .menu__link::before,
-        .menu--viola .menu__link::after,
-        .flip-list .dots a.active{
-            background: {{ctrl.pageColor}};
-        }
-    </style>
-    <div class="loader" ng-class="{hidden: ctrl.loader}"></div>
+<body class="dark-theme" ng-app="cardsApp" ng-controller="cardsCtrl as ctrl">
+    <div class="loader" ng-class="{hidden: ctrl.loader}">
+        <div class="spinner"></div>
+    </div>
+    
     <nav class="menu menu--viola">
         <ul class="menu__list">
             <li class="menu__item">
@@ -55,8 +32,8 @@
                 </a>
             </li>
             <li class="menu__item" ui-sref-active="menu__item--current">
-                <a ui-sref="config" class="menu__link" >
-                    Konfiguruj
+                <a ui-sref="test" class="menu__link">
+                    Testuj
                 </a>
             </li>
             <li class="menu__item">
@@ -69,10 +46,9 @@
     
     <ui-view></ui-view>
     
-    <div class="noti noti--success" ng-class="{'noti--active': ctrl.notiSuccess}">Zapisano aktualny stan fiszek!</div>
-    <div class="noti noti--warning" ng-class="{'noti--active': ctrl.notiWarning}">Wprowadź pytanie i odpowiedź!</div>
     <script src="js/angular.min.js"></script>
     <script src="js/angular-ui-router.min.js"></script>
+    <script src="js/angular-ui-notification.js"></script>
     <script src="js/angular-animate.min.js"></script>
     <script src="js/scripts.js"></script>
 </body>

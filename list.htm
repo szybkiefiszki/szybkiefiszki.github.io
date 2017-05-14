@@ -12,57 +12,55 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="card in ctrl.cards">
-                    <td class="small">{{$index}}</td>
+                <tr  ng-repeat="card in ctrl.cards">
+                    <td class="small">{{$index+1}}</td>
                     <td class="medium image">
                         <div class="image__overview" 
                             ng-style="{'background-image': 'url('+card.image+')'}"
                             ng-class="{'image--important': card.image == undefined}"
                                 ></div>
                         <input type="file" fileread="card.image" id="file{{$index}}"/>
-                        <label class="image__label primary" for="file{{$index}}" ng-show="card.image == undefined">
+                        <label class="image__label btn primary" for="file{{$index}}" ng-show="card.image == undefined">
                             <i class="fa fa-upload" aria-hidden="true"></i>
                         </label>
                         
-                        <a class="image__remove danger" ng-show="card.image != undefined" ng-click="card.image=null">
-                            <i class="fa fa-remove" aria-hidden="true"></i>
-                        </a>
+                        
+                        <div class="image__options" ng-show="card.image != undefined">
+                            <input type="checkbox" ng-model="card.imageText" id="imagetext{{$index}}" class="image__text"/>
+                            <label class="image__textlabel btn" ng-class="{white: card.imageText}" for="imagetext{{$index}}">
+                                <i class="fa fa-font" aria-hidden="true"></i>
+                            </label>
+                            <a class="btn danger" ng-click="card.image=null"><i class="fa fa-remove" aria-hidden="true"></i></a>
+                            
+                        </div>
                     </td>
                     <td>
                         <input ng-model="card.question" />
                     </td>
                     <td><input ng-model="card.answer" /></td>
                     <td class="small">
-                        <a ng-click="ctrl.removeCard($index)" class="danger">
+                        <a ng-click="ctrl.removeCard($index)" class="btn danger">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </a>
                     </td>
                 </tr>
                 <tr class="new-card">
-                    <td class="small">{{ctrl.cards.length}}</td>
+                    <td class="small"></td>
                     <td class="medium image">
-                        <div class="image__overview" 
-                            ng-style="{'background-image': 'url('+ctrl.image+')'}"
-                            ng-class="{'image--important': ctrl.image == undefined}"
-                                ></div>
-                        <input type="file" fileread="ctrl.image" id="file{{$index}}"/>
-                        <label class="image__label primary" for="file{{$index}}" ng-show="ctrl.image == undefined">
-                            <i class="fa fa-upload" aria-hidden="true"></i>
-                        </label>
                         
-                        <a class="image__remove danger" ng-show="ctrl.image != undefined" ng-click="ctrl.image=null">
-                            <i class="fa fa-remove" aria-hidden="true"></i>
-                        </a>
                     </td>
                     <td><input ng-model="ctrl.question" /></td>
                     <td><input ng-model="ctrl.answer" /></td>
                     <td class="small">
-                        <a ng-click="ctrl.addCard()" class="success">
+                        <a ng-click="ctrl.addCard()" class="btn success">
                             <i class="fa fa-plus" aria-hidden="true"></i>
                         </a>
                     </td>
                 </tr>
             </tbody>
         </table>
+        <a ng-show="ctrl.history.length > 1" ng-click="ctrl.backHistory()" class="btn primary back-history">
+             <i class="fa fa-history" aria-hidden="true"></i>
+        </a>
         </div>
     </div>
